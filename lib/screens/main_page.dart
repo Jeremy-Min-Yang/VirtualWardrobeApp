@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -7,7 +8,16 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LookLab'),
+        title: Row(
+          children: [
+            SvgPicture.asset(
+              'assets/images/looklablogo.svg', // Path to your SVG file
+              height: 30, // Adjust size as needed
+            ),
+            const SizedBox(width: 10), // Spacing between the logo and text
+            const Text('LookLab'),
+          ],
+        ),
       ),
       body: Center(
         child: Column(
