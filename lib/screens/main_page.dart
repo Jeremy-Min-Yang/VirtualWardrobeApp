@@ -12,20 +12,16 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 2; // Default to the "Add" button in the middle
   final Color maroonColor =
       const Color(0xFF76323F); // Maroon color for all items
-  final Color lightBeigeColor =
-      const Color(0xFFF2EAE3); // Light shade for the navbar
-  final Color tanColor =
-      const Color(0xFFD7CEC7); // Tan color for the widget background
 
   // List of image paths for the cards
   final List<String> images = [
-    '/assets/images/sample_jacket1.jpg',
-    'assets/images/sample_jacket2.jpg',
-    'assets/images/sample_pants1.jpg',
-    'assets/images/sample_shoes1.png',
-    'assets/images/sample_shoes2.png',
-    'assets/images/sample_hat1.png',
-    'assets/images/sample_shirt1.png',
+    'lib/assets/images/sample_jacket1.jpg',
+    'lib/assets/images/sample_jacket2.jpg',
+    'lib/assets/images/sample_pants1.jpg',
+    'lib/assets/images/sample_shoes1.png',
+    'lib/assets/images/sample_shoes2.png',
+    'lib/assets/images/sample_hat1.png',
+    'lib/assets/images/sample_shirt1.png',
   ];
 
   // Function to handle navigation bar item tapping
@@ -58,8 +54,10 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Set Scaffold background color to white
       appBar: AppBar(
-        backgroundColor: tanColor, // Set AppBar background color to tan
+        backgroundColor: Colors.white, // Set AppBar background color to white
+        elevation: 0, // Remove AppBar shadow for a cleaner look
         title: Center(
           child: SvgPicture.asset(
             'lib/assets/images/looklablogo.svg', // Correct path to your SVG file
@@ -67,101 +65,107 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20), // Spacing from the AppBar
-            const Text(
-              "What shall we wear today, Jeremy?",
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay', // Custom font family
-                fontSize: 18,
-                fontWeight: FontWeight.bold, // Bolded for emphasis
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 20), // Spacing after subtitle
 
-            // Right-Aligned Weather Widget with Side Margins and No Shadow
+            // Row with Subtitle and Weather Widget
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20), // Add horizontal padding
-              child: Align(
-                alignment:
-                    Alignment.centerRight, // Aligns the container to the right
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: tanColor, // Set background color to tan
-                    borderRadius: BorderRadius.circular(8),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "What shall we wear today?",
+                    style: TextStyle(
+                      fontFamily: 'PlayfairDisplay', // Custom font family
+                      fontSize: 18, // Original font size
+                      fontWeight: FontWeight.bold, // Standard bold for emphasis
+                      color: Colors.black87,
+                    ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.wb_sunny,
-                        color: Colors.orange,
-                        size: 30,
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Seoul',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Set background color to white
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.wb_sunny,
+                          color: Colors.orange,
+                          size: 30,
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Seoul',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '22°C',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                            Text(
+                              '22°C',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
 
             const SizedBox(height: 20), // Spacing after weather widget
 
-            // Grid of Cards with Images
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: images.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.asset(
-                          images[index],
-                          fit: BoxFit.cover,
+            // Grid of Cards with Images and Shadows
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GridView.count(
+                physics:
+                    const NeverScrollableScrollPhysics(), // Disable GridView's own scrolling
+                shrinkWrap: true, // Make GridView occupy only necessary space
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                children: images.map((imagePath) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black
+                              .withOpacity(0.1), // Soft shadow color
+                          blurRadius: 10, // Amount of blur for the shadow
+                          offset: const Offset(0, 5), // Position of the shadow
                         ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.asset(
+                        imagePath,
+                        fit: BoxFit
+                            .contain, // Center and scale images within the container
+                        alignment: Alignment.center,
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ],
@@ -169,7 +173,7 @@ class _MainPageState extends State<MainPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor:
-            lightBeigeColor, // Light beige for the navbar background
+            Colors.white, // Set BottomNavigationBar background to white
         type: BottomNavigationBarType.fixed, // Ensure all items are visible
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -197,16 +201,16 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.checkroom,
+              Icons.checkroom_outlined,
               color: maroonColor,
-            ), // Fits icon
+            ), // Bolder outline Fits icon
             label: 'Fits',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              Icons.person_outline,
               color: maroonColor,
-            ), // Login/Profile icon
+            ), // Bolder outline Profile icon
             label: 'Jeremy',
           ),
         ],
