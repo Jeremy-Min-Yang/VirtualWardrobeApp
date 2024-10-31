@@ -25,3 +25,10 @@ flutter:
 
   assets:
     - lib/assets/images/
+
+  fonts:
+    - family: PlayfairDisplay
+      fonts:
+        - asset: fonts/PlayfairDisplay-Regular.ttf
+        - asset: fonts/PlayfairDisplay-Bold.ttf
+          weight: 700
