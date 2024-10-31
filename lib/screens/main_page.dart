@@ -9,7 +9,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 2; // Default to the "Add" button in the middle
+  int _selectedIndex = 0; // Default to "Home"
   final Color maroonColor =
       const Color(0xFF76323F); // Maroon color for all items
 
@@ -30,10 +30,10 @@ class _MainPageState extends State<MainPage> {
       _selectedIndex = index;
     });
 
-    // Add specific actions based on the item selected
     switch (index) {
       case 0:
-        print('Favorites Selected');
+        // "Home" button tapped - Stay on MainPage
+        Navigator.pushNamed(context, '/');
         break;
       case 1:
         print('Collections Selected');
@@ -42,11 +42,10 @@ class _MainPageState extends State<MainPage> {
         Navigator.pushNamed(context, '/clothing-overview');
         break;
       case 3:
-        print('Fits Selected');
         Navigator.pushNamed(context, '/outfit-customization');
         break;
       case 4:
-        print('Login Selected');
+        print('Profile Selected');
         break;
     }
   }
@@ -78,13 +77,14 @@ class _MainPageState extends State<MainPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "What shall we wear today?",
                     style: TextStyle(
                       fontFamily: 'PlayfairDisplay', // Custom font family
                       fontSize: 18, // Original font size
                       fontWeight: FontWeight.bold, // Standard bold for emphasis
-                      color: Colors.black87,
+                      color:
+                          maroonColor, // Match subtitle text color to nav bar
                     ),
                   ),
                   Container(
@@ -94,7 +94,7 @@ class _MainPageState extends State<MainPage> {
                       color: Colors.white, // Set background color to white
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
@@ -102,10 +102,10 @@ class _MainPageState extends State<MainPage> {
                           color: Colors.orange,
                           size: 30,
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               'Seoul',
                               style: TextStyle(
@@ -180,10 +180,10 @@ class _MainPageState extends State<MainPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.star,
+              Icons.home,
               color: maroonColor,
-            ), // Star for Favorites
-            label: 'Favorites',
+            ), // Changed icon to "home" for MainPage
+            label: 'Home', // Updated label to "Home"
           ),
           BottomNavigationBarItem(
             icon: Icon(

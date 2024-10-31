@@ -6,7 +6,7 @@ import 'package:device_preview/device_preview.dart';
 
 void main() {
   runApp(DevicePreview(
-    builder: (context) => VirtualWardrobeApp(),
+    builder: (context) => const VirtualWardrobeApp(),
   ));
 }
 
@@ -31,9 +31,9 @@ class VirtualWardrobeApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => MainPage(),
-        '/clothing-overview': (context) => ClothingOverviewPage(),
-        '/outfit-customization': (context) => OutfitCustomizationPage(),
+        '/': (context) => const MainPage(),
+        '/clothing-overview': (context) => const ClothingOverviewPage(),
+        '/outfit-customization': (context) => const OutfitCustomizationPage(),
       },
     );
   }
