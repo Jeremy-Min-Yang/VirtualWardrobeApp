@@ -9,9 +9,10 @@ class OutfitCustomizationPage extends StatefulWidget {
 }
 
 class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
-  final Color maroonColor = const Color(0xFF76323F); // Maroon color for all items
+  final Color maroonColor =
+      const Color(0xFF76323F); // Maroon color for all items
   int _selectedIndex = 3; // Default to the "Fits" tab on navigation bar
-  bool includeJacket = false; // Checkbox state for Jacket
+  final TextEditingController _textController = TextEditingController();
 
   // Example clothing item lists
   final List<String> hats = [
@@ -37,7 +38,8 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
   int selectedShoeIndex = 0;
 
   // Function to cycle through items
-  void cycleItem(List<String> items, int index, bool forward, Function(int) onUpdate) {
+  void cycleItem(
+      List<String> items, int index, bool forward, Function(int) onUpdate) {
     setState(() {
       int newIndex = (index + (forward ? 1 : -1)) % items.length;
       if (newIndex < 0) newIndex = items.length - 1;
@@ -68,18 +70,51 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
     }
   }
 
-  // Function to handle AI assistant interaction
+  // Function to handle AI assistant interaction with input field
   void showAIAdvice() {
-    // Placeholder for AI interaction logic
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("AI Assistant"),
-        content: const Text("Here's some advice on what to wear today!"),
+        title: Text(
+          "LookLab Assistant",
+          style: TextStyle(color: maroonColor, fontWeight: FontWeight.bold),
+        ),
+        content: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _textController,
+                decoration: InputDecoration(
+                  hintText: 'Ask LookLab AI...',
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.mic, color: maroonColor),
+              onPressed: () {
+                // Placeholder for microphone functionality
+                print("Microphone pressed");
+              },
+            ),
+          ],
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              print("User input: ${_textController.text}");
+              _textController.clear(); // Clear the input field after submission
+            },
+            child: Text(
+              "Submit",
+              style: TextStyle(color: maroonColor, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -111,46 +146,67 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildClothingItemSelector(hats, selectedHatIndex, (index) => setState(() => selectedHatIndex = index)),
-              _buildClothingItemSelector(tops, selectedTopIndex, (index) => setState(() => selectedTopIndex = index)),
-              _buildClothingItemSelector(bottoms, selectedBottomIndex, (index) => setState(() => selectedBottomIndex = index)),
-              _buildClothingItemSelector(shoes, selectedShoeIndex, (index) => setState(() => selectedShoeIndex = index)),
-            ],
+          // Padding around the image selector column
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 40), // Add padding on the left side
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildClothingItemSelector(hats, selectedHatIndex,
+                    (index) => setState(() => selectedHatIndex = index)),
+                _buildClothingItemSelector(tops, selectedTopIndex,
+                    (index) => setState(() => selectedTopIndex = index)),
+                _buildClothingItemSelector(bottoms, selectedBottomIndex,
+                    (index) => setState(() => selectedBottomIndex = index)),
+                _buildClothingItemSelector(shoes, selectedShoeIndex,
+                    (index) => setState(() => selectedShoeIndex = index)),
+              ],
+            ),
           ),
+          // Position elements on the right side with reduced gap
           Positioned(
-            right: 30,
+            right:
+                50, // Reduced right padding to bring icons closer to image cards
+            top: MediaQuery.of(context).size.height * 0.25,
             child: Column(
               children: [
+                // Lock Icon
+                IconButton(
+                  icon: Icon(Icons.lock_outline, color: maroonColor, size: 32),
+                  onPressed: () {
+                    print("Lock icon pressed");
+                  },
+                ),
+                const SizedBox(height: 15), // Reduced padding between items
+
+                // Randomize button
                 IconButton(
                   icon: Icon(Icons.casino, color: maroonColor, size: 32),
                   onPressed: randomizeOutfit,
                 ),
-                IconButton(
-                  icon: Icon(Icons.chat_bubble_outline, color: maroonColor, size: 32),
-                  onPressed: showAIAdvice,
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            left: 30,
-            child: Row(
-              children: [
-                Checkbox(
-                  value: includeJacket,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      includeJacket = value ?? false;
-                    });
-                  },
-                  activeColor: maroonColor,
-                ),
-                const Text(
-                  "Jacket",
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                const SizedBox(height: 15), // Reduced padding between items
+
+                // AI advice button with label
+                Column(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.chat_bubble_outline,
+                          color: maroonColor, size: 32),
+                      onPressed: showAIAdvice,
+                    ),
+                    const SizedBox(
+                        height: 4), // Reduced space between icon and text
+                    const Text(
+                      "Lab AI",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold, // Make text bold
+                        color: Color(0xFF76323F), // Same maroon color as icons
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -192,9 +248,11 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
   }
 
   // Widget to build each clothing item with navigation arrows
-  Widget _buildClothingItemSelector(List<String> items, int selectedIndex, Function(int) onUpdate) {
+  Widget _buildClothingItemSelector(
+      List<String> items, int selectedIndex, Function(int) onUpdate) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment:
+          MainAxisAlignment.start, // Align items to the start (left)
       children: [
         IconButton(
           icon: const Icon(Icons.arrow_left, color: Colors.grey),
