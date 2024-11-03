@@ -84,7 +84,6 @@ class _ClothingOverviewPageState extends State<ClothingOverviewPage> {
       ),
       body: Column(
         children: [
-          // Reduced padding between the title and icons
           Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
@@ -104,7 +103,6 @@ class _ClothingOverviewPageState extends State<ClothingOverviewPage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    // Replace with your "Save" functionality
                     print('Save Selected');
                   },
                   icon: Icon(
@@ -123,7 +121,6 @@ class _ClothingOverviewPageState extends State<ClothingOverviewPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Image Card for sample_jacket1.png with maroon border
                     Container(
                       height: 250,
                       width: double.infinity,
