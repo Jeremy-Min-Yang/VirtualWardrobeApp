@@ -64,6 +64,16 @@ class _ClothingOverviewPageState extends State<ClothingOverviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Retrieve the passed arguments
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+
+    // Get each clothing item
+    String? hat = args?['hat'];
+    String? top = args?['top'];
+    String? bottom = args?['bottom'];
+    String? shoes = args?['shoes'];
+
     return Scaffold(
       backgroundColor: Colors.white, // Set consistent background color
       appBar: AppBar(
@@ -144,7 +154,7 @@ class _ClothingOverviewPageState extends State<ClothingOverviewPage> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Image.asset(
-                          'lib/assets/images/sample_jacket1.jpg',
+                          top ?? 'lib/assets/images/sample_jacket1.jpg',
                           fit: BoxFit.contain, // Fit image within the container
                         ),
                       ),

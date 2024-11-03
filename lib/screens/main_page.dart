@@ -24,6 +24,14 @@ class _MainPageState extends State<MainPage> {
     'lib/assets/images/sample_shirt1.png',
   ];
 
+  // Example selected outfit (can be dynamic in the real app)
+  final Map<String, String> selectedOutfit = {
+    'hat': 'lib/assets/images/sample_hat1.png',
+    'top': 'lib/assets/images/sample_jacket1.jpg',
+    'bottom': 'lib/assets/images/sample_pants1.jpg',
+    'shoes': 'lib/assets/images/sample_shoes1.png',
+  };
+
   // Function to handle navigation bar item tapping
   void _onItemTapped(int index) {
     setState(() {
@@ -41,8 +49,8 @@ class _MainPageState extends State<MainPage> {
         _showCameraScreen(context); // Show camera screen first
         break;
       case 3:
-        Navigator.pushNamed(
-            context, '/outfit-customization'); // Go to Outfit Customization
+        Navigator.pushNamed(context, '/outfit-customization',
+            arguments: selectedOutfit); // Pass data to outfit customization
         break;
       case 4:
         print('Profile Selected');
@@ -58,8 +66,9 @@ class _MainPageState extends State<MainPage> {
         builder: (context) => Scaffold(
           body: GestureDetector(
             onTap: () {
-              Navigator.pushReplacementNamed(context,
-                  '/clothing-overview'); // Go to import_overview after tap
+              Navigator.pushReplacementNamed(context, '/clothing-overview',
+                  arguments:
+                      selectedOutfit); // Pass outfit data to clothing overview
             },
             child: Image.asset(
               'lib/assets/images/camerascreen.png', // Show the camera screen image
@@ -80,6 +89,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         backgroundColor: Colors.white, // Set AppBar background color to white
         elevation: 0, // Remove AppBar shadow for a cleaner look
+        scrolledUnderElevation: 0, // Prevent color change when scrolling
         automaticallyImplyLeading: false, // Ensure no back icon is shown
         title: Center(
           child: SvgPicture.asset(

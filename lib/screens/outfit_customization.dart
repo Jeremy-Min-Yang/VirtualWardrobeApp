@@ -60,6 +60,7 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
     });
   }
 
+  // Function to handle navigation bar item tap
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -74,8 +75,13 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
         case 0:
           Navigator.pushNamed(context, '/'); // Navigate to Main Page
           break;
+        case 1:
+          Navigator.pushNamed(
+              context, '/clothing-overview'); // Navigate to clothing overview
+          break;
         case 3:
-          Navigator.pushNamed(context, '/outfit-customization');
+          Navigator.pushNamed(
+              context, '/outfit-customization'); // Stay on the current page
           break;
         default:
           break;
@@ -83,7 +89,7 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
     }
   }
 
-  // Function to show the camera screen (camerascreen.png)
+  // Function to show the camera screen
   void _showCameraScreen(BuildContext context) {
     Navigator.push(
       context,
