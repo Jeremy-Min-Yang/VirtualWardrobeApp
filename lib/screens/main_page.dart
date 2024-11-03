@@ -32,22 +32,45 @@ class _MainPageState extends State<MainPage> {
 
     switch (index) {
       case 0:
-        // "Home" button tapped - Stay on MainPage
-        Navigator.pushNamed(context, '/');
+        Navigator.pushNamed(context, '/'); // Navigate to Home
         break;
       case 1:
         print('Collections Selected');
         break;
-      case 2:
-        Navigator.pushNamed(context, '/clothing-overview');
+      case 2: // "Add" button clicked
+        _showCameraScreen(context); // Show camera screen first
         break;
       case 3:
-        Navigator.pushNamed(context, '/outfit-customization');
+        Navigator.pushNamed(
+            context, '/outfit-customization'); // Go to Outfit Customization
         break;
       case 4:
         print('Profile Selected');
         break;
     }
+  }
+
+  // Function to show the camera screen (camerascreen.png)
+  void _showCameraScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          body: GestureDetector(
+            onTap: () {
+              Navigator.pushReplacementNamed(context,
+                  '/clothing-overview'); // Go to import_overview after tap
+            },
+            child: Image.asset(
+              'lib/assets/images/camerascreen.png', // Show the camera screen image
+              fit: BoxFit.cover,
+              height: double.infinity,
+              width: double.infinity,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -57,6 +80,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         backgroundColor: Colors.white, // Set AppBar background color to white
         elevation: 0, // Remove AppBar shadow for a cleaner look
+        automaticallyImplyLeading: false, // Ensure no back icon is shown
         title: Center(
           child: SvgPicture.asset(
             'lib/assets/images/looklablogo.svg', // Correct path to your SVG file
@@ -179,38 +203,23 @@ class _MainPageState extends State<MainPage> {
         onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: maroonColor,
-            ), // Changed icon to "home" for MainPage
-            label: 'Home', // Updated label to "Home"
+            icon: Icon(Icons.home, color: maroonColor),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.collections,
-              color: maroonColor,
-            ), // Collections icon
+            icon: Icon(Icons.collections, color: maroonColor),
             label: 'Collections',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle,
-              color: maroonColor, // Bold Add icon
-            ), // Bold Add icon in the middle
-            label: 'Add',
+            icon: Icon(Icons.add_circle, color: maroonColor),
+            label: 'Add', // Clicking this will show the camera screen first
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.checkroom_outlined,
-              color: maroonColor,
-            ), // Bolder outline Fits icon
+            icon: Icon(Icons.checkroom_outlined, color: maroonColor),
             label: 'Fits',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_outline,
-              color: maroonColor,
-            ), // Bolder outline Profile icon
+            icon: Icon(Icons.person_outline, color: maroonColor),
             label: 'Jeremy',
           ),
         ],

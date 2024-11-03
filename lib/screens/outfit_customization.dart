@@ -25,7 +25,7 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
   ];
   final List<String> bottoms = [
     'lib/assets/images/sample_pants1.jpg',
-    'lib/assets/images/sample_pants2.jpg',
+    'lib/assets/images/sample_pants2.png',
   ];
   final List<String> shoes = [
     'lib/assets/images/sample_shoes1.png',
@@ -36,6 +36,9 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
   int selectedTopIndex = 0;
   int selectedBottomIndex = 0;
   int selectedShoeIndex = 0;
+
+  // Track which item is being hovered over
+  int? hoveredItemIndex;
 
   // Function to cycle through items
   void cycleItem(
@@ -62,12 +65,45 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
       _selectedIndex = index;
     });
 
-    // Navigate to Main Page if "Home" is tapped
-    if (index == 0) {
-      Navigator.pushNamed(context, '/');
-    } else if (index == 2) {
-      Navigator.pushNamed(context, '/clothing-overview');
+    if (index == 2) {
+      // Show camera screen first, then navigate to import overview
+      _showCameraScreen(context);
+    } else {
+      // Navigate to other pages as usual
+      switch (index) {
+        case 0:
+          Navigator.pushNamed(context, '/'); // Navigate to Main Page
+          break;
+        case 3:
+          Navigator.pushNamed(context, '/outfit-customization');
+          break;
+        default:
+          break;
+      }
     }
+  }
+
+  // Function to show the camera screen (camerascreen.png)
+  void _showCameraScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          body: GestureDetector(
+            onTap: () {
+              Navigator.pushReplacementNamed(context,
+                  '/clothing-overview'); // Go to import_overview after tap
+            },
+            child: Image.asset(
+              'lib/assets/images/camerascreen.png', // Show the camera screen image
+              fit: BoxFit.cover,
+              height: double.infinity,
+              width: double.infinity,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   // Function to handle AI assistant interaction with input field
@@ -154,14 +190,19 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildClothingItemSelector(hats, selectedHatIndex,
-                    (index) => setState(() => selectedHatIndex = index)),
-                _buildClothingItemSelector(tops, selectedTopIndex,
-                    (index) => setState(() => selectedTopIndex = index)),
+                _buildClothingItemSelector(hats, selectedHatIndex, (index) {
+                  setState(() => selectedHatIndex = index);
+                }, 0),
+                _buildClothingItemSelector(tops, selectedTopIndex, (index) {
+                  setState(() => selectedTopIndex = index);
+                }, 1),
                 _buildClothingItemSelector(bottoms, selectedBottomIndex,
-                    (index) => setState(() => selectedBottomIndex = index)),
-                _buildClothingItemSelector(shoes, selectedShoeIndex,
-                    (index) => setState(() => selectedShoeIndex = index)),
+                    (index) {
+                  setState(() => selectedBottomIndex = index);
+                }, 2),
+                _buildClothingItemSelector(shoes, selectedShoeIndex, (index) {
+                  setState(() => selectedShoeIndex = index);
+                }, 3),
               ],
             ),
           ),
@@ -172,11 +213,11 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
             top: MediaQuery.of(context).size.height * 0.25,
             child: Column(
               children: [
-                // Lock Icon
+                // Save Icon
                 IconButton(
-                  icon: Icon(Icons.lock_outline, color: maroonColor, size: 32),
+                  icon: Icon(Icons.save, color: maroonColor, size: 32),
                   onPressed: () {
-                    print("Lock icon pressed");
+                    print("Save icon pressed");
                   },
                 ),
                 const SizedBox(height: 15), // Reduced padding between items
@@ -247,37 +288,71 @@ class _OutfitCustomizationPageState extends State<OutfitCustomizationPage> {
     );
   }
 
-  // Widget to build each clothing item with navigation arrows
-  Widget _buildClothingItemSelector(
-      List<String> items, int selectedIndex, Function(int) onUpdate) {
-    return Row(
-      mainAxisAlignment:
-          MainAxisAlignment.start, // Align items to the start (left)
-      children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_left, color: Colors.grey),
-          onPressed: () => cycleItem(items, selectedIndex, false, onUpdate),
-        ),
-        Container(
-          height: 150,
-          width: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: maroonColor.withOpacity(0.2)),
+  // Widget to build each clothing item with navigation arrows and lock on hover
+  Widget _buildClothingItemSelector(List<String> items, int selectedIndex,
+      Function(int) onUpdate, int itemIndex) {
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          hoveredItemIndex = itemIndex; // Set the hovered item index
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          hoveredItemIndex = null; // Reset when no longer hovered
+        });
+      },
+      child: Stack(
+        children: [
+          Row(
+            mainAxisAlignment:
+                MainAxisAlignment.start, // Align items to the start (left)
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_left, color: Colors.grey),
+                onPressed: () =>
+                    cycleItem(items, selectedIndex, false, onUpdate),
+              ),
+              Stack(
+                children: [
+                  Container(
+                    height: 150,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: maroonColor.withOpacity(0.2)),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        items[selectedIndex],
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  if (hoveredItemIndex == itemIndex)
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          print("Lock icon clicked for item $itemIndex");
+                        },
+                        child: Icon(Icons.lock_outline,
+                            color: maroonColor, size: 24),
+                      ),
+                    ),
+                ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_right, color: Colors.grey),
+                onPressed: () =>
+                    cycleItem(items, selectedIndex, true, onUpdate),
+              ),
+            ],
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              items[selectedIndex],
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.arrow_right, color: Colors.grey),
-          onPressed: () => cycleItem(items, selectedIndex, true, onUpdate),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
